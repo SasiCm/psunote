@@ -1,0 +1,11 @@
+<form method="post">
+    <p>
+        <label for="name">ชื่อแท็ก:</label><br>
+        <input type="text" name="name" value="{{ tag.name }}"><br>
+        {% if tag.name %}
+            <input type="submit" value="แก้ไขแท็ก">
+        {% else %}
+            <input type="submit" value="แก้ไขแท็ก" disabled>
+        {% endif %}
+    </p>
+</form>
