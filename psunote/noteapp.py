@@ -139,6 +139,26 @@ def notes_edit(note_id):
     return flask.render_template("notes-edit.html", form=form, note=note)
 
 
+
+@app.route("/notes/<int:note_id>/tags/<int:tag_id>/delete", methods=["POST"])
+def tag_delete_from_note(note_id, tag_id):
+    db = models.db
+    note = db.session.execute(db.select(models.Note).where(models.Note.id == note_id)).scalars().first()
+    tag = db.session.execute(db.select(models.Tag).where(models.Tag.id == tag_id)).scalars().first()
+
+    if not note or not tag:
+        flask.flash("โน้ตหรือแท็กไม่พบ", "error")
+    else:
+        if tag in note.tags:
+            note.tags.remove(tag)
+            db.session.commit()
+            flask.flash("ลบแท็กเรียบร้อยแล้ว!", "success")
+        else:
+            flask.flash("แท็กไม่อยู่ในโน้ตนี้", "error")
+
+    return flask.redirect(flask.url_for("notes_edit", note_id=note_id))
+
+
 @app.route("/notes/<int:note_id>/delete", methods=["POST"])
 def notes_delete(note_id):
     db = models.db
